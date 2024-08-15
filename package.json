@@ -1,0 +1,32 @@
+{
+  "name": "prettier-plugin-miniprogram",
+  "version": "1.0.0",
+  "description": "",
+  "keywords": [],
+  "author": "jaskang",
+  "license": "MIT",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "vitest",
+    "build": "tsup"
+  },
+  "dependencies": {
+    "@wxml/parser": "^0.4.0"
+  },
+  "devDependencies": {
+    "@jaskang/config": "^2.0.3",
+    "@jaskang/eslint-config": "^3.2.2",
+    "@jaskang/tsconfig": "^1.0.2",
+    "@types/node": "^22.3.0",
+    "eslint": "^9.9.0",
+    "prettier": "^3.3.3",
+    "tsup": "^8.2.4",
+    "typescript": "^5.5.4",
+    "vitest": "^2.0.5"
+  },
+  "peerDependencies": {
+    "prettier": ">=3.0.0"
+  },
+  "packageManager": "pnpm@9.4.0"
+}

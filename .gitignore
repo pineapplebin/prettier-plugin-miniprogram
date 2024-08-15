@@ -1,0 +1,11 @@
+.DS_Store
+node_modules
+.vscode-test
+
+dist
+out
+*.tsbuildinfo
+*.vsix
+**/vite.config.*.mjs
+
+!.gitkeep
