@@ -31,14 +31,10 @@ export const printer: Printer = {
     if (node.type === NodeType.Program) {
       return path.map(print, 'body')
     } else if (node.type === NodeType.WXElement) {
-      const { startTag } = node
-      if (startTag.selfClosing) {
+      if (node.startTag.selfClosing) {
         return path.call(print, 'startTag')
       }
-      const a = path.call(print, 'startTag')
-      const b = group(path.map(print, 'children'))
-      const c = path.call(print, 'endTag')
-      return group([a, b, c])
+      return group([path.call(print, 'startTag'), group(path.map(print, 'children')), path.call(print, 'endTag')])
     } else if (node.type === NodeType.WXStartTag) {
       const { name, selfClosing } = node
       if (selfClosing) {
@@ -68,8 +64,16 @@ export const printer: Printer = {
       console.log('WXInterpolation', node)
       return ['{{ ', path.call(print, 'value'), ' }}']
     } else if (node.type === NodeType.WXScript) {
-      console.log('WXScript', node)
-      return group([print(node.startTag), path.call(print, 'value'), print(node.endTag)])
+      if (node.startTag.selfClosing) {
+        return group([hardline, path.call(print, 'startTag'), hardline])
+      }
+      return group([
+        hardline,
+        path.call(print, 'startTag'),
+        group(path.map(print, 'children')),
+        path.call(print, 'endTag'),
+        hardline,
+      ])
     }
     throw new Error(`Unknown node type: ${node.type}`)
   },
