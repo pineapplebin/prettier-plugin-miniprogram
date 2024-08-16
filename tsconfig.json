@@ -4,5 +4,5 @@
     "baseUrl": ".",
     "types": ["node"]
   },
-  "include": ["env.d.ts", "src/**/*"]
+  "include": ["env.d.ts", "src/**/*", "test/**/*"]
 }

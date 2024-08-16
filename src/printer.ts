@@ -15,6 +15,11 @@ const NodeType = {
 
 const {
   group, // (d.1) Prettier 最基本的方法，会根据 printWidth 等配置项自动换行（或不换行）
+  join,
+  indent,
+  ifBreak,
+  line,
+  softline,
   hardline, // (d.2) 换行
 } = doc.builders
 
@@ -34,25 +39,33 @@ export const printer: Printer = {
       if (node.startTag.selfClosing) {
         return path.call(print, 'startTag')
       }
-      return group([path.call(print, 'startTag'), group(path.map(print, 'children')), path.call(print, 'endTag')])
+      return group([
+        path.call(print, 'startTag'),
+        indent([ifBreak('', line), path.map(print, 'children')]),
+        line,
+        path.call(print, 'endTag'),
+      ])
     } else if (node.type === NodeType.WXStartTag) {
-      const { name, selfClosing } = node
-      if (selfClosing) {
-        return group([`<${name}`, group(path.map(print, 'attributes')), ' />'])
+      const { name, selfClosing, attributes } = node
+      if (attributes.length === 0) {
+        return selfClosing ? `<${name}/>` : `<${name}>`
       }
-      return [`<${name}`, group(path.map(print, 'attributes')), '>']
+      if (selfClosing) {
+        return group([`<${name}`, indent([line, join(line, path.map(print, 'attributes'))]), line, '/>'])
+      }
+      return group([`<${name}`, indent([line, join(line, path.map(print, 'attributes'))]), softline, '>'])
     } else if (node.type === NodeType.WXEndTag) {
       return [`</${node.name}>`]
     } else if (node.type === NodeType.WXAttribute) {
       console.log('WXAttribute', node)
       const { key, value, children } = node
       if (Array.isArray(children) && children.length > 0) {
-        return group([` ${key}="`, group(path.map(print, 'children')), '"'])
+        return [`${key}="`, group(path.map(print, 'children')), '"']
       }
       if (value === null) {
-        return group([` ${key}`])
+        return `${key}`
       }
-      return group([` ${key}`, `="${value}"`])
+      return group([`${key}`, `="${value}"`])
     } else if (node.type === NodeType.WXText) {
       return (node.value || '').trim()
     } else if (node.type === NodeType.WXComment) {
@@ -67,13 +80,6 @@ export const printer: Printer = {
       if (node.startTag.selfClosing) {
         return group([hardline, path.call(print, 'startTag'), hardline])
       }
-      return group([
-        hardline,
-        path.call(print, 'startTag'),
-        group(path.map(print, 'children')),
-        path.call(print, 'endTag'),
-        hardline,
-      ])
     }
     throw new Error(`Unknown node type: ${node.type}`)
   },
@@ -98,14 +104,13 @@ export const printer: Printer = {
     } else if (node.type === NodeType.WXScript) {
       if (!node.startTag.selfClosing) {
         return async (textToDoc, print) => {
-          const jsExp = await textToDoc(node.value, { ...options, ...JS_OPTIONS, parser: 'babel' })
-          const { formatted } = doc.printer.printDocToString(jsExp, toStringOptions)
+          const jsdoc = await textToDoc(node.value, { ...options, ...JS_OPTIONS, parser: 'babel' })
+          const { formatted } = doc.printer.printDocToString(indent(jsdoc), toStringOptions)
           return group([
             hardline,
             path.call(print, 'startTag'),
-            hardline,
-            formatted,
-            hardline,
+            indent([line, formatted]),
+            line,
             path.call(print, 'endTag'),
             hardline,
           ])
