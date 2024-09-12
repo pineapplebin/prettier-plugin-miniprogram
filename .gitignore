@@ -6,6 +6,7 @@ dist
 out
 *.tsbuildinfo
 *.vsix
+
 **/vite.config.*.mjs
 
 !.gitkeep
