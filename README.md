@@ -1,0 +1,15 @@
+https://www.radix-ui.com/
+https://ui.shadcn.com/
+https://floatui.com/
+https://ant-design.antgroup.com/components/overview-cn
+https://preline.co/
+https://github.com/ziishaned/learn-regex/blob/master/translations/README-cn.md
+https://heroicons.com/
+https://cn.vuejs.org/api/
+https://mui.com/
+https://headlessui.com/
+https://mantine.dev/
+https://v2.chakra-ui.com/docs/components
+https://primevue.org/
+https://ariakit.org/
+https://lucide.dev/

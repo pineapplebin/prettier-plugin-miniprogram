@@ -7,7 +7,8 @@ describe('prettier', async () => {
     const code = `
 <view class="state__for">
   <view class="state__btn" aria-role="button" bindtap="goInsuranceIndex" hover-stay-time="60" hover-class="btn-hover">
-    完成</view>
+    完成
+</view>
     <span>三地发烧那地方拉丝发生了{{asdfasdf}}对方撒了发的</span>
   <span>
     

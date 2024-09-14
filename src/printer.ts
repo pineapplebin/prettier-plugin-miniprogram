@@ -51,28 +51,30 @@ export const printer: Printer = {
         return selfClosing ? `<${name}/>` : `<${name}>`
       }
       if (selfClosing) {
-        return group([`<${name}`, indent([line, join(line, path.map(print, 'attributes'))]), line, '/>'])
+        return group([
+          `<${name} `,
+          indent(group([softline, join(line, path.map(print, 'attributes'))])),
+          softline,
+          '/>',
+        ])
       }
-      return group([`<${name}`, indent([line, join(line, path.map(print, 'attributes'))]), softline, '>'])
+      return group([`<${name} `, indent([softline, join(line, path.map(print, 'attributes'))]), softline, '>'])
     } else if (node.type === NodeType.WXEndTag) {
       return [`</${node.name}>`]
     } else if (node.type === NodeType.WXAttribute) {
       console.log('WXAttribute', node)
-      const { key, value, children } = node
-      if (Array.isArray(children) && children.length > 0) {
-        return [`${key}="`, group(path.map(print, 'children')), '"']
-      }
+      const { key, value } = node
       if (value === null) {
         return `${key}`
       }
-      return group([`${key}`, `="${value}"`])
+      return `${key}="${value}"`
     } else if (node.type === NodeType.WXText) {
       return (node.value || '').trim()
     } else if (node.type === NodeType.WXComment) {
       return [`<!-- ${node.value} -->`]
     } else if (node.type === NodeType.WXAttributeInterpolation) {
       console.log('WXAttributeInterpolation', node)
-      return ['{{ ', path.call(print, 'value'), ' }}']
+      return ['{{ ', node.value, ' }}']
     } else if (node.type === NodeType.WXInterpolation) {
       console.log('WXInterpolation', node)
       return ['{{ ', path.call(print, 'value'), ' }}']
@@ -94,7 +96,7 @@ export const printer: Printer = {
     // 返回 null，则交给 print(c.1) 继续执行
     if (!node || !node.type) return null
 
-    if (node.type === NodeType.WXAttributeInterpolation || node.type === NodeType.WXInterpolation) {
+    if (node.type === NodeType.WXInterpolation) {
       // TIPS: 这里js表达式的格式化会换行，需要去掉res末尾的换行符
       return async textToDoc => {
         const jsExp = await textToDoc(node.value, { ...options, ...JS_OPTIONS, parser: 'babel' })
