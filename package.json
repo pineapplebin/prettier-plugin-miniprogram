@@ -1,6 +1,6 @@
 {
   "name": "prettier-plugin-miniprogram",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "keywords": [],
   "author": "jaskang",
@@ -9,7 +9,8 @@
   "main": "index.js",
   "scripts": {
     "test": "vitest",
-    "build": "tsup"
+    "build": "tsup",
+    "release": "pnpm run build && bumpp"
   },
   "dependencies": {
     "@wxml/parser": "^0.4.0"
@@ -19,6 +20,7 @@
     "@jaskang/eslint-config": "^3.2.2",
     "@jaskang/tsconfig": "^1.0.2",
     "@types/node": "^22.13.1",
+    "bumpp": "^10.0.3",
     "eslint": "^9.9.0",
     "prettier": "^3.5.0",
     "tsup": "^8.3.6",
