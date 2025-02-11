@@ -13,6 +13,12 @@ npm install -D @pineapple-bin/prettier-plugin-miniprogram
 ```js
 // .prettierrc
 {
-  plugins: ['@pineapple-bin/prettier-plugin-miniprogram']
+  "plugins": ['@pineapple-bin/prettier-plugin-miniprogram'],
+  "overrides": [
+    {
+      "files": ["*.wxml"],
+      "options": { "parser": "wxml" }
+    }
+  ]
 }
 ```
