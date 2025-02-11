@@ -23,29 +23,6 @@ import {
   trimTextNodeRight,
 } from './utils';
 
-// const NodeType = {
-//   Program: 'Program',
-//   WXElement: 'WXElement',
-//   WXScript: 'WXScript',
-//   WXText: 'WXText',
-//   WXAttributeInterpolation: 'WXAttributeInterpolation',
-//   WXInterpolation: 'WXInterpolation',
-//   WXComment: 'WXComment',
-//   WXAttribute: 'WXAttribute',
-//   WXStartTag: 'WXStartTag',
-//   WXEndTag: 'WXEndTag',
-// } as const;
-
-// const {
-//   group, // (d.1) Prettier 最基本的方法，会根据 printWidth 等配置项自动换行（或不换行）
-//   join,
-//   indent,
-//   ifBreak,
-//   line,
-//   softline,
-//   hardline, // (d.2) 换行
-// } = doc.builders;
-
 const {
   builders: {
     group,
@@ -55,17 +32,12 @@ const {
     line,
     softline,
     hardline,
-    lineSuffix,
     literalline,
     breakParent,
     dedent,
   },
   utils: { stripTrailingHardline },
 } = _doc;
-
-const JS_OPTIONS = {
-  __embeddedInHtml: true,
-};
 
 /**
  * Split the text into words separated by whitespace. Replace the whitespaces by lines,

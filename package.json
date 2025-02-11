@@ -1,12 +1,20 @@
 {
   "name": "prettier-plugin-miniprogram",
   "version": "1.0.1",
-  "description": "",
-  "keywords": [],
-  "author": "jaskang",
+  "description": "prettier plugin for wechat miniprogram",
+  "keywords": [
+    "prettier",
+    "miniprogram",
+    "wechat"
+  ],
+  "author": "pineapplebin <pineapplewing@126.com>",
   "license": "MIT",
   "type": "module",
   "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pineapplebin/prettier-plugin-miniprogram.git"
+  },
   "scripts": {
     "test": "vitest",
     "build": "tsup",

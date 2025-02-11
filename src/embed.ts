@@ -59,6 +59,7 @@ export const embed = ((path: AstPath<AST.Node>, options) => {
         ...options,
         singleQuote: true,
         parser: 'babel',
+        __embeddedInHtml: true,
       });
 
       formattedScript = stripTrailingHardline(formattedScript);
@@ -76,7 +77,6 @@ export const embed = ((path: AstPath<AST.Node>, options) => {
         '>',
       ]);
 
-      console.log('openingTag', openingTag);
       return [
         openingTag,
         indent([isEmpty ? '' : hardline, formattedScript]),
