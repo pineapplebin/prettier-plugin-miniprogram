@@ -45,3 +45,5 @@ export const defaultOptions: Partial<RequiredOptions> | undefined =
   plugin.defaultOptions;
 
 export default plugin;
+
+export type { AST as MiniprogramAST };

@@ -3,6 +3,7 @@
     "Hardline",
     "Linebreak",
     "literalline",
+    "Miniprogram",
     "softline",
     "whitespaces"
   ]

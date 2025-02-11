@@ -18,19 +18,6 @@ declare module '@wxml/parser' {
       range: [number, number];
     }
 
-    // const NodeType = {
-    //   Program: 'Program',
-    //   WXElement: 'WXElement',
-    //   WXScript: 'WXScript',
-    //   WXText: 'WXText',
-    //   WXAttributeInterpolation: 'WXAttributeInterpolation',
-    //   WXInterpolation: 'WXInterpolation',
-    //   WXComment: 'WXComment',
-    //   WXAttribute: 'WXAttribute',
-    //   WXStartTag: 'WXStartTag',
-    //   WXEndTag: 'WXEndTag',
-    // } as const;
-
     interface Program extends BaseNode {
       type: 'Program';
       body: Node[];
