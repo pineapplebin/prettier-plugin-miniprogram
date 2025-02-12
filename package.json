@@ -1,6 +1,6 @@
 {
   "name": "@pineapple-bin/prettier-plugin-miniprogram",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "prettier plugin for wechat miniprogram",
   "keywords": [
     "prettier",
