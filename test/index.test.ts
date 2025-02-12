@@ -1,8 +1,13 @@
 import { describe, expect, test } from 'vitest';
 import { wrapFormat } from './utils';
-import { testNestedViewSnapshot, testWxsSnapshot } from './index.snapshot';
 
 describe('prettier-plugin-miniprogram', async () => {
+  test('playground', async () => {
+    const code = `<image class="long long long long" src="https://xxxxxxxxxxxxxxxxxxxx" aspect="very-long" ></image>
+`;
+    const formatted = await wrapFormat(code);
+  });
+
   test('nested view', async () => {
     const code = `<view class="state__for">
   <view class="state__btn" aria-role="button" bindtap="goInsuranceIndex" hover-stay-time="60" hover-class="btn-hover">
@@ -12,10 +17,32 @@ describe('prettier-plugin-miniprogram', async () => {
     <span>三地发烧那地方拉丝发生了{{data.someAttr}}对方撒了发的</span>
   <span>
 
-    asdfasd</span></view>`;
+    asdfasd</span>
+    <image class="long long long long" src="https://xxxxxxxxxxxxxxxxxxxx" aspect="very-long" ></image>
+    </view>`;
 
     const formatted = await wrapFormat(code);
-    expect(formatted).toEqual(testNestedViewSnapshot);
+    expect(formatted).toMatchInlineSnapshot(`
+      "<view class="state__for">
+        <view
+          class="state__btn"
+          aria-role="button"
+          bindtap="goInsuranceIndex"
+          hover-stay-time="60"
+          hover-class="btn-hover"
+        >
+          完成
+        </view>
+        <span class="{{styleClass + 'hello'}}">some</span>
+        <span>三地发烧那地方拉丝发生了{{data.someAttr}}对方撒了发的</span>
+        <span> asdfasd</span>
+        <image
+          class="long long long long"
+          src="https://xxxxxxxxxxxxxxxxxxxx"
+          aspect="very-long"></image>
+      </view>
+      "
+    `);
   });
 
   test('wxs', async () => {
@@ -27,6 +54,51 @@ describe('prettier-plugin-miniprogram', async () => {
     }
     </wxs>`;
     const formatted = await wrapFormat(code);
-    expect(formatted).toEqual(testWxsSnapshot);
+    expect(formatted).toMatchInlineSnapshot(`
+      "<wxs hidden />
+      <wxs src="./../tools.wxs" asdf module="tools" hidden />
+      <wxs module="test">
+        module.exports.a = function () {
+          console.log('wow');
+        };
+      </wxs>
+      "
+    `);
+  });
+
+  test('interpolation', async () => {
+    const code = `<view class="{{normalData}}">
+{{normalNumber > 10 ? 10 : 20}}
+</view>
+<view class="{{computed === true ? 'yes' : 'no'}}"></view>
+<view class="long long long long long long long long long long {{expression > 10 ? (expressionB < 10 ? 'B' : 'C') : 'A'}}"></view>`;
+
+    const formatted = await wrapFormat(code);
+    expect(formatted).toMatchInlineSnapshot(`
+      "<view class="{{normalData}}">
+        {{normalNumber > 10 ? 10 : 20}}
+      </view>
+      <view class="{{computed === true ? 'yes' : 'no'}}"></view>
+      <view
+        class="long long long long long long long long long long {{expression > 10 ? (expressionB < 10 ? 'B' : 'C') : 'A'}}"
+      ></view>
+      "
+    `);
+  });
+
+  test('force self closing', async () => {
+    const code = `<input></input>
+    <input/>
+    <import src="path/to/comp" ></import>
+    <progress></progress>`;
+
+    const formatted = await wrapFormat(code);
+    expect(formatted).toMatchInlineSnapshot(`
+      "<input />
+      <input />
+      <import src="path/to/comp" />
+      <progress />
+      "
+    `);
   });
 });

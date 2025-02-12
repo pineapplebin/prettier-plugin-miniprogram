@@ -9,6 +9,7 @@ type TextToDoc = (text: string, options: Options) => Promise<Doc>;
 type Embed = Printer<AST.Node>['embed'];
 
 const {
+  printer: { printDocToString },
   builders: { group, indent, softline, hardline },
   utils: { stripTrailingHardline },
 } = _doc;
@@ -47,9 +48,15 @@ export const embed = ((path: AstPath<AST.Node>, options) => {
         semi: false,
         singleQuote: true,
         parser: 'babel',
+        __embeddedInHtml: true,
       });
       content = stripTrailingHardline(content);
-      return ['{{', content, '}}'];
+      // 保留在一行
+      const contentToString = printDocToString(
+        content,
+        options as Required<Options>,
+      );
+      return ['{{', contentToString.formatted, '}}'];
     }
 
     // WXScript

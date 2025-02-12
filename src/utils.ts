@@ -15,16 +15,28 @@ export type printFn = (path: AstPath) => Doc;
 export type ParserOptions = ParserOpts<AST.Node>;
 export type AstPath = AstP<AST.Node>;
 
-export const openingBracketReplace = '_Pé';
-export const closingBracketReplace = 'èP_';
-export const atSignReplace = 'ΩP_';
-export const dotReplace = 'ωP_';
-export const interrogationReplace = 'ΔP_';
+/**
+ * 非块级别元素名称
+ */
+export const nonBlockElements: string[] = [
+  'text',
+  'image',
+  'span',
+  'progress',
+  'import',
+  'icon',
+];
 
 /**
- * 块级别元素名称
+ * 强制自闭合标签
  */
-export const blockElements: string[] = ['view', 'template', 'block'];
+export const forceSelfClosingTags: string[] = [
+  'import',
+  'input',
+  'progress',
+  'switch',
+  'slider',
+];
 
 /**
  * 可格式化的属性
@@ -52,7 +64,15 @@ export function isBlockElement(node: AST.Node, opts: ParserOptions): boolean {
     (node.type === 'WXElement' || node.type === 'WXScript') &&
     opts.htmlWhitespaceSensitivity !== 'strict' &&
     (opts.htmlWhitespaceSensitivity === 'ignore' ||
-      blockElements.includes(node.name))
+      !nonBlockElements.includes(node.name))
+  );
+}
+
+export function isForceSelfClosingTag(node: AST.Node): boolean {
+  return (
+    node &&
+    node.type === 'WXElement' &&
+    forceSelfClosingTags.includes(node.name)
   );
 }
 

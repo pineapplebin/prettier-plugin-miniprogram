@@ -7,6 +7,7 @@ import {
   getNextNode,
   getUnencodedText,
   isEmptyTextNode,
+  isForceSelfClosingTag,
   isIgnoreDirective,
   isInlineElement,
   isPreTagContent,
@@ -35,6 +36,7 @@ const {
     literalline,
     breakParent,
     dedent,
+    ifBreak,
   },
   utils: { stripTrailingHardline },
 } = _doc;
@@ -167,7 +169,7 @@ export const print: Printer<AST.Node>['print'] = (path, options, print) => {
       const attributeLine = isSingleLinePerAttribute ? breakParent : '';
       const attributes = join(attributeLine, path.map(print, 'attributes'));
 
-      if (isSelfClosingTag) {
+      if (isSelfClosingTag || isForceSelfClosingTag(node)) {
         return group(['<', node.name, indent(attributes), line, `/>`]);
       }
 
@@ -194,6 +196,7 @@ export const print: Printer<AST.Node>['print'] = (path, options, print) => {
       const hugStart = shouldHugStart(node, options);
       const hugEnd = shouldHugEnd(node, options);
 
+      console.log(node.name, isEmpty, hugStart, hugEnd);
       let body;
       if (isEmpty) {
         body =
@@ -294,7 +297,9 @@ export const print: Printer<AST.Node>['print'] = (path, options, print) => {
       }
 
       if (isEmpty) {
-        return group([...openingTag, '>', body(), `</${node.name}>`]);
+        // empty element with no children
+        // 前后标签不换行
+        return group([...openingTag, '>', `</${node.name}>`]);
       }
 
       return group([
