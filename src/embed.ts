@@ -36,14 +36,34 @@ async function wrapParserTryCatch(
       }
     } catch (e2) {
       // real error
-      console.error('Failed to parse:', e2);
-      // If we couldn't parse the expression (ex: syntax error) and we throw here, Prettier fallback to `print` and we'll
-      // get a totally useless error message (ex: unhandled node type). An undocumented way to work around this is to set
-      // `PRETTIER_DEBUG=1`, but nobody know that exists / want to do that just to get useful error messages. So we force it on
       process.env.PRETTIER_DEBUG = 'true';
+      console.error('Failed to parse:', e2);
       throw e2;
     }
   }
+}
+
+function keepOneLinePrint(doc: Doc, options: Options): Doc {
+  // 保留在一行
+  let { formatted: contentString } = printDocToString(
+    doc,
+    options as Required<Options>,
+  );
+  const pureContentStringMatched = contentString.match(/^{?{([^{}]*)}?}$/);
+  let pureContentString;
+  if (pureContentStringMatched && pureContentStringMatched[1]) {
+    pureContentString = pureContentStringMatched[1];
+  } else {
+    pureContentString = contentString;
+  }
+
+  pureContentString = pureContentString
+    .split('\n')
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .join(' ');
+
+  return ['{{', pureContentString, '}}'];
 }
 
 export const embed = ((path: AstPath<AST.Node>, options) => {
@@ -57,7 +77,6 @@ export const embed = ((path: AstPath<AST.Node>, options) => {
       node.type === 'WXInterpolation' ||
       node.type === 'WXAttributeInterpolation'
     ) {
-      console.log('node.value:', node.value);
       let content = await wrapParserTryCatch(textToDoc, node.value, {
         ...parserOption,
         parser: 'wxml-interpolation',
@@ -66,19 +85,9 @@ export const embed = ((path: AstPath<AST.Node>, options) => {
         bracketSpacing: false,
         __embeddedInHtml: true,
       });
-      console.log(content);
       content = stripTrailingHardline(content);
       // 保留在一行
-      const { formatted: contentString } = printDocToString(
-        content,
-        options as Required<Options>,
-      );
-      const needExtraBracket = !/^{{.*}}$/.test(contentString);
-      return [
-        needExtraBracket ? '{' : '',
-        contentString,
-        needExtraBracket ? '}' : '',
-      ];
+      return keepOneLinePrint(content, options);
     }
 
     // WXScript

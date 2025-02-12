@@ -73,7 +73,10 @@ describe('prettier-plugin-miniprogram', async () => {
 <view class="long long long long long long long long long long {{expression > 10 ? (expressionB < 10 ? 'B' : 'C') : 'A'}}"></view>
 <view data="{{p,...expr, a}}"></view>
 <view data="{{a: 10, b: someAttr}}"></view>
-<view data="{{a: computed > 10 ? someA : someB}}"></view>`;
+<view data="{{a: computed > 10 ? someA : someB}}"></view>
+<view class="head-card-name head-card-name-{{detail.detail.cardType}} head-card-name-sub-type-{{detail.detail.extra.subType === 8 ? detail.detail.extra.subType + '-' + detail.detail.extra.pendulumSubType : detail.detail.extra.subType}}">
+{{detail.detail.name}}
+</view>`;
 
     const formatted = await wrapFormat(code);
     expect(formatted).toMatchInlineSnapshot(`
@@ -87,6 +90,11 @@ describe('prettier-plugin-miniprogram', async () => {
       <view data="{{p, ...expr, a}}"></view>
       <view data="{{a: 10, b: someAttr}}"></view>
       <view data="{{a: computed > 10 ? someA : someB}}"></view>
+      <view
+        class="head-card-name head-card-name-{{detail.detail.cardType}} head-card-name-sub-type-{{detail.detail.extra.subType === 8 ? detail.detail.extra.subType + '-' + detail.detail.extra.pendulumSubType : detail.detail.extra.subType}}"
+      >
+        {{detail.detail.name}}
+      </view>
       "
     `);
   });
