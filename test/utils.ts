@@ -9,6 +9,7 @@ export async function wrapFormat(
     parser: 'wxml',
     plugins: [plugin],
     semi: true,
+    singleQuote: true,
     ...options,
   });
   console.log('----- start ----\n' + formatted + '\n----- end ----');

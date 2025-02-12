@@ -76,7 +76,8 @@ describe('prettier-plugin-miniprogram', async () => {
 <view data="{{a: computed > 10 ? someA : someB}}"></view>
 <view class="head-card-name head-card-name-{{detail.detail.cardType}} head-card-name-sub-type-{{detail.detail.extra.subType === 8 ? detail.detail.extra.subType + '-' + detail.detail.extra.pendulumSubType : detail.detail.extra.subType}}">
 {{detail.detail.name}}
-</view>`;
+</view>
+<template is="sub-type" data="{{...detail.detail, properties, linkArrows, MonsterAttrMap, MonsterRaceMap, SpellSubTypeMap, TrapSubTypeMap, TMonsterCardType}}"></template>`;
 
     const formatted = await wrapFormat(code);
     expect(formatted).toMatchInlineSnapshot(`
@@ -95,6 +96,10 @@ describe('prettier-plugin-miniprogram', async () => {
       >
         {{detail.detail.name}}
       </view>
+      <template
+        is="sub-type"
+        data="{{...detail.detail, properties, linkArrows, MonsterAttrMap, MonsterRaceMap, SpellSubTypeMap, TrapSubTypeMap, TMonsterCardType}}"
+      ></template>
       "
     `);
   });

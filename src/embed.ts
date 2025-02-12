@@ -82,7 +82,9 @@ export const embed = ((path: AstPath<AST.Node>, options) => {
         parser: 'wxml-interpolation',
         semi: false,
         singleQuote: true,
+        jsxSingleQuote: true, // useless
         bracketSpacing: false,
+        trailingComma: 'none',
         __embeddedInHtml: true,
       });
       content = stripTrailingHardline(content);
@@ -96,7 +98,6 @@ export const embed = ((path: AstPath<AST.Node>, options) => {
       let formattedScript = await wrapParserTryCatch(textToDoc, scriptContent, {
         ...options,
         parser: 'babel',
-        singleQuote: true,
         __embeddedInHtml: true,
       });
 
