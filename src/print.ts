@@ -196,7 +196,6 @@ export const print: Printer<AST.Node>['print'] = (path, options, print) => {
       const hugStart = shouldHugStart(node, options);
       const hugEnd = shouldHugEnd(node, options);
 
-      console.log(node.name, isEmpty, hugStart, hugEnd);
       let body;
       if (isEmpty) {
         body =

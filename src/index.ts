@@ -9,6 +9,9 @@ import {
 } from 'prettier';
 import { print } from './print';
 import { embed } from './embed';
+import * as prettierPluginBabel from 'prettier/plugins/babel';
+
+const babelParser = prettierPluginBabel.parsers.babel;
 
 export const plugin: Plugin = {
   languages: [
@@ -25,6 +28,24 @@ export const plugin: Plugin = {
       astFormat: 'wxml-ast',
       locStart: (node) => node.start,
       locEnd: (node) => node.end,
+    },
+    /**
+     * 兼容小程序的插值表达式
+     *
+     * data="{{...data}}" 或 data="{{a: 1}}"
+     */
+    'wxml-interpolation': {
+      ...babelParser,
+      preprocess(text) {
+        return `<>{${text}\n}</>`;
+      },
+      parse(text, opts) {
+        const ast = babelParser.parse(text, opts);
+        return {
+          ...ast,
+          program: ast.program.body[0].expression.children[0],
+        };
+      },
     },
   },
   printers: {

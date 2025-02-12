@@ -3,8 +3,7 @@ import { wrapFormat } from './utils';
 
 describe('prettier-plugin-miniprogram', async () => {
   test('playground', async () => {
-    const code = `<image class="long long long long" src="https://xxxxxxxxxxxxxxxxxxxx" aspect="very-long" ></image>
-`;
+    const code = `<view data="{{...c, b}}"></view>`;
     const formatted = await wrapFormat(code);
   });
 
@@ -71,7 +70,10 @@ describe('prettier-plugin-miniprogram', async () => {
 {{normalNumber > 10 ? 10 : 20}}
 </view>
 <view class="{{computed === true ? 'yes' : 'no'}}"></view>
-<view class="long long long long long long long long long long {{expression > 10 ? (expressionB < 10 ? 'B' : 'C') : 'A'}}"></view>`;
+<view class="long long long long long long long long long long {{expression > 10 ? (expressionB < 10 ? 'B' : 'C') : 'A'}}"></view>
+<view data="{{p,...expr, a}}"></view>
+<view data="{{a: 10, b: someAttr}}"></view>
+<view data="{{a: computed > 10 ? someA : someB}}"></view>`;
 
     const formatted = await wrapFormat(code);
     expect(formatted).toMatchInlineSnapshot(`
@@ -82,6 +84,9 @@ describe('prettier-plugin-miniprogram', async () => {
       <view
         class="long long long long long long long long long long {{expression > 10 ? (expressionB < 10 ? 'B' : 'C') : 'A'}}"
       ></view>
+      <view data="{{p, ...expr, a}}"></view>
+      <view data="{{a: 10, b: someAttr}}"></view>
+      <view data="{{a: computed > 10 ? someA : someB}}"></view>
       "
     `);
   });
