@@ -32,7 +32,7 @@
   },
   "scripts": {
     "test": "vitest",
-    "build": "tsup",
+    "build": "tsup-node",
     "release": "pnpm run build && bumpp"
   },
   "dependencies": {
